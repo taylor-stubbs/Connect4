@@ -1,0 +1,148 @@
+#title {
+    text-align: center;
+    text-transform: uppercase;
+    text-align: center;
+    
+    font-family: "Trebuchet MS";
+    font-size: 90px;
+    
+    -webkit-text-stroke-width: 1.5px;
+    -webkit-text-stroke-color: black;
+    
+    color: #ff3838;
+
+    margin: 3px;
+}
+
+body {
+    background-color: white
+}
+
+#win-banner {
+    background-color: #7bc13e;
+    
+    font-family: "Trebuchet MS";
+    text-align: center; 
+    
+    margin: 5px;
+    padding: 3px;
+    
+    visibility: hidden;
+}
+
+#board-input {
+    margin: 10px;
+    text-align: center;
+}
+
+input[type=text] {
+    margin-right: 5px;
+}
+
+/********* GAME *********/
+
+#game-container {
+    display:flex;
+    justify-content: center;
+
+    visibility: hidden;
+}
+
+
+#game-board {
+    display:flex;
+    flex-direction: row;
+
+    border: 2px;
+    border-style: solid;
+    border-radius: 25px;
+   
+    background-color: #6d9eebff;
+    
+    padding: 5px;
+    margin-bottom: 10px;
+    
+    display:inline-block;
+    
+    clear:left;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    
+    float: left;
+}
+
+.column:hover {
+    border: 0.7px solid white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px white;
+}
+
+.row {
+    border-color: black;
+    border-width: 2px;
+    border-style: solid;
+    border-radius: 50%;
+
+    background-color: #F0F0F0;
+    
+    height: 85px;
+    width: 85px;
+    
+    margin: 7px;
+}
+
+#select-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+#select-row>.row {
+    visibility: hidden;
+}
+
+.counter {
+    border-color: black;
+    border-width: 2px;
+    border-style: solid;
+    border-radius: 50%;
+    
+    height: 180px;
+    width: 180px;
+}
+
+
+
+/********* WIN AREA *********/
+
+#red-score {
+    background-color: red;
+    position:fixed;
+    
+    left:50px;
+    bottom:30px;
+}
+
+#yellow-score {
+    background-color: yellow;
+    
+    right:50px;
+    bottom:30px;
+}
+
+
+/********* MISC *********/
+
+#yellow {
+    color: yellow;
+}
+
+.fixed-element {
+    background-color: #c0c0c0;
+    position:fixed;
+        
+    z-index:100;
+}

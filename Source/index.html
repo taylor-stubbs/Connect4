@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head> 
+    <title>Connect 4</title>
+    <link rel="stylesheet" href="index.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <h1 id="title">Connect <span id="yellow">4</span></h1>
+    <div id="win-banner"></div>
+    <div id="board-input">
+        <label for="row">Rows:</label>
+        <input type="text" id="row-input" name="row" value="5" size="1" maxlength="2">
+        <label id="column-label" for="column">Columns:</label>
+        <input type="text" id="col-input" name="col" value="6" size="1" maxlength="2">
+        <br /><button onclick="newGame()">New Game</button>
+    </div>
+    <div id="select-row"></div>
+    <div id="game-container">
+        
+        <div id="game-board"></div>
+    </div>
+    <div id="player-info">
+        <div id="red-score" class="counter fixed-element">
+            <div id="score-label"></div>
+        </div>
+        <div id="yellow-score" class="counter fixed-element">
+            <div id="score-label">  </div>
+        </div>
+    </div>
+    <script src="./index.js"></script>
+</body>
+
+</html>

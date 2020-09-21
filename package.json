@@ -1,0 +1,23 @@
+{
+  "name": "new",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/taylor-stubbs/mini-project.git"
+  },
+  "author": "Taylor Stubbs",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/taylor-stubbs/mini-project/issues"
+  },
+  "homepage": "https://github.com/taylor-stubbs/mini-project#readme",
+  "devDependencies": {
+    "jest": "^26.4.2",
+    "supertest": "^4.0.2"
+  }
+}
