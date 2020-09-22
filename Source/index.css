@@ -118,17 +118,25 @@ input[type=text] {
 
 /********* WIN AREA *********/
 
+
 #red-score {
     background-color: red;
-    position:fixed;
-    
     left:50px;
     bottom:30px;
 }
 
+.score-label {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    
+    padding-top:55px;
+    
+    text-align:center;
+    font-size:50px;
+}
+
 #yellow-score {
     background-color: yellow;
-    
+
     right:50px;
     bottom:30px;
 }

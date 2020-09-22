@@ -17,12 +17,12 @@ class Player {
   }
   
   addWin() {
-    score += 1;
+    this.score += 1;
   }
 }
 
 const game = {
-    players: ['Red', 'Yellow'],
+    players: [],
     board: [],
     turn: 0,
     winner: null,
@@ -91,6 +91,7 @@ function checkWin(row, col, board, player) {
     }
   }
   if (win) {
+    player.addWin();  
     return player;
   }
   return null;
@@ -106,15 +107,16 @@ function getRowCoord(col, board) {
 }
 
 app.post('/board', (req, res) => {
-    console.log("console")
+    let player1 = new Player('Taylor', 'red');
+    let player2 = new Player('Ryan', 'yellow');
     const rowInput = req.body.row;
     const colInput = req.body.col;
-    console.log("new board")
     if (rowInput > 10 || colInput > 12) {
         throw new Error('Invalid board size.');
     }
 
     // Maybe make this into a seperate function 
+    game.players.push(player1,player2);
     game.board = createBoard(rowInput, colInput);
     game.turn = 0;
     game.winner = null;
@@ -123,11 +125,11 @@ app.post('/board', (req, res) => {
 
 
 app.post('/counter', (req, res) => {
-
     const col = req.body.col;
     const row = getRowCoord(col, game.board);
+
     if (validMove(col, game.board) && game.winner === null) {
-        game.board = placeCounter(req.body.col, game.board, game.players[game.turn]);
+        game.board = placeCounter(req.body.col, game.board, (game.players[game.turn]));
         game.winner = checkWin(row, col, game.board, game.players[game.turn]);
         game.turn = switchPlayer(game.turn);
     };

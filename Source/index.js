@@ -9,17 +9,18 @@ function render(board, player) {
           makeMove(i);
         });
         $(`#${i}`).hover(function () {
-            $(`#select-row #${i}`).css('visibility', 'visible')
+            $(`#select-row #${i}`).css('visibility', 'visible');
         }, function () {
-            $(`#select-row #${i}`).css('visibility', 'hidden')
+            $(`#select-row #${i}`).css('visibility', 'hidden');
         });
         for (let j = 0; j < rows; j += 1) {
           $(`#${i}`).append(`<div id="${i}-${j}" class="row"></div>`);
-          $(`#${i}-${j}`).css('background-color', board[i][j]);
-        }
-        $('#select-row').append(`<div id="${i}" class="row"></div>`)
-        $('#select-row').children().css('background-color', player);
-        
+          $(`#${i}-${j}`).css('background-color', 
+            board[i][j] === null ? null : board[i][j].colour
+          );
+        };
+        $('#select-row').append(`<div id="${i}" class="row"></div>`);
+        $('#select-row').children().css('background-color', player.colour);
     }
 }
 
@@ -36,9 +37,9 @@ function makeMove(colChoice) {
         success: result => {
             render(result.board, result.players[result.turn]);
             if(result.winner !== null) {
-                $('#win-banner').text(`${result.winner} wins!`);
+                $('#win-banner').text(`${result.winner.name} wins!`);
                 $('#win-banner').css('visibility', 'visible');
-                
+                $(`#${result.winner.colour}-score .score-label`).text(result.winner.score);
             }
         },
     });
