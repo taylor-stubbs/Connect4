@@ -85,4 +85,19 @@ test('Can win horizontally', () => {
     // Assert
     expect(expectedWinner).toEqual(actualWinner);
 });
+
+it.todo('Can win diagonally +ve');
+
+it.todo('Can win diagonally -ve');
+
+it.todo('Cannot create board greater than 10x12');
+
+it.todo('Cannot place a counter in full column');
+
+it.todo('Game over when board is full');
+
+it.todo('Can increase player score');
+
+
+
  
