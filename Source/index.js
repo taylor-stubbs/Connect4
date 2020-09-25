@@ -42,7 +42,16 @@ function render(board, player) {
   }
 }
 
-
+function resetScore() {
+  $.ajax({
+    type: 'GET',
+    url: '/reset',
+    success: result => {
+      $(`#${result[0].colour}-score .score-label`).text(result[0].score);
+      $(`#${result[1].colour}-score .score-label`).text(result[1].score);
+    }
+  })
+}
 
 
 function newGame() {
@@ -59,6 +68,7 @@ function newGame() {
     contentType: 'application/json',
     success: result => {
         render(result.board, result.players[result.turn]);
+
         $('#game-board').css('visibility', 'visible');
     },
     error: function () {
@@ -68,3 +78,13 @@ function newGame() {
 }
 
 
+window.onload = function () {
+  $.ajax({
+    type: 'GET',
+    url: '/players',
+    success: result => {
+      $(`#${result[0].colour}-score .score-label`).text(result[0].score);
+      $(`#${result[1].colour}-score .score-label`).text(result[1].score);
+    }
+  })
+}

@@ -194,7 +194,15 @@ describe('Can win horizontally', () => {
     });
 });
 
-it.todo('Can win diagonally +ve');
+describe('Can win diagonally +ve', () => {
+    const p1 = new Player('Taylor', 'red')
+    const p2 = new Player('Ryan', 'yellow')
+    
+    // Arrange
+    each([
+        ['red', 'yellow', 'red', 'yellow']
+    ]).it()
+});
 
 it.todo('Can win diagonally -ve');
 

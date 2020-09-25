@@ -1,4 +1,6 @@
 const { isModuleSpecifier } = require('@babel/types');
+const { EWOULDBLOCK } = require('constants');
+const { resolveNaptr } = require('dns');
 const { json } = require('express');
 const express = require('express');
 const fs = require('fs').promises;
@@ -35,6 +37,10 @@ class Player {
 
   get colour() {
     return this.colour;
+  }
+
+  resetScore() {
+    this.score = 0;
   }
 }
 
@@ -143,7 +149,7 @@ function negDiagonalWin(row, col, board, player) {
     cp += 1;
   }
 
-  while(rp > 0 && cp > 0) {
+  while(rp >= 0 && cp >= 0) {
     if (board[cp][rp] === player.colour) {
       count += 1;
     } else {
@@ -171,7 +177,7 @@ function posDiagonalWin(row, col, board, player) {
     cp -= 1;
   }
 
-  while(rp > 0 && cp < w - 1) {
+  while(rp >= 0 && cp < w) {
     if (board[cp][rp] === player.colour) {
       count += 1;
     } else {
@@ -223,13 +229,22 @@ app.post('/counter', (req, res) => {
       game.winner = checkWin(row, col, game.board, game.players[game.turn]);
       game.turn = switchPlayer(game.turn);
       saveGame(game.players);
+      res.sendStatus(200);
       res.send(game);
   } else {
     res.sendStatus(400);
   }
 });
 
+app.get('/players', (req, res) => {
+  res.send(game.players);
+})
 
+app.get('/reset', (req, res) => {
+  game.players[0].resetScore();
+  game.players[1].resetScore();
+  res.send(game.players);
+})
 
 if (process.env.NODE_ENV !== "test") {
   app.listen(8080, async () => {
@@ -245,6 +260,7 @@ if (process.env.NODE_ENV !== "test") {
     console.log('server started on port 8080');
   });
 };
+
 
 module.exports = {
   placeCounter,
