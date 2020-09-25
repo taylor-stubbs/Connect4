@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1600986899471" clover="3.2.0">
-  <project timestamp="1600986899472" name="All files">
+<coverage generated="1601013101006" clover="3.2.0">
+  <project timestamp="1601013101006" name="All files">
     <metrics statements="78" coveredstatements="72" conditionals="25" coveredconditionals="23" methods="14" coveredmethods="10" elements="117" coveredelements="105" complexity="0" loc="78" ncloc="78" packages="1" files="1" classes="1"/>
     <file name="server.js" path="/Users/taylalex/Documents/Academy/Connect4/Server/server.js">
       <metrics statements="78" coveredstatements="72" conditionals="25" coveredconditionals="23" methods="14" coveredmethods="10"/>
