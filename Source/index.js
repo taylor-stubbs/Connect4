@@ -15,9 +15,7 @@ function render(board, player) {
         });
         for (let j = 0; j < rows; j += 1) {
           $(`#${i}`).append(`<div id="${i}-${j}" class="row"></div>`);
-          $(`#${i}-${j}`).css('background-color', 
-            board[i][j] === null ? null : board[i][j].colour
-          );
+          $(`#${i}-${j}`).css('background-color', board[i][j]);
         };
         $('#select-row').append(`<div id="${i}" class="row"></div>`);
         $('#select-row').children().css('background-color', player.colour);

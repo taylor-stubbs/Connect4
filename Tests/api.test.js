@@ -1,7 +1,7 @@
 const request = require('supertest');
 const { app } = require('../Server/server.js');
 const each = require("jest-each").default;
-
+const assert = require("assert")
 describe('POST /board', () => {
     let expectedBoard = [[null, null, null, null],
                         [null, null, null, null],
@@ -28,6 +28,17 @@ describe('POST /board', () => {
             })
             .end(done);
     });
+
+    it('should send 400 status code when creating board larger than 10x12', done => {
+        request(app)
+            .post('/board').send({    // What are we sending in the post request?
+                row: 11,
+                col: 13               // Random number choice
+            })
+                                      // Request succeeded [200]
+            .expect(400)
+            .end(done);
+    });
 });
 
 describe('POST /counter', () => {
@@ -44,14 +55,18 @@ describe('POST /counter', () => {
                 col: 6                  // Random number choice
             })
             .expect(200)                // Request succeeded [200]
-            .expect(() => {
-                expect.objectContaining({
+            .expect(res => {
+                assert(res.body, {
                     players: ['red', 'yellow'],
                     board: expectedBoard,
                     turn: 1,
-                    winner: null,
-                })
+                    winner: null, })
             })
             .end(done);
     });
+
+
 });
+
+
+

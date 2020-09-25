@@ -9,15 +9,28 @@ app.use(express.json());
 class Player {
   name;
   colour;
-  score = 0;
+  score;
 
-  constructor(name, colour) {
+  constructor(name, colour, score = 0) {
     this.name = name;
     this.colour = colour;
+    this.score = score;
   }
   
   addWin() {
     this.score += 1;
+  }
+
+  get name() {
+    return this.name;
+  }
+
+  get score() {
+    return this.score;
+  }
+
+  get colour() {
+    return this.colour;
   }
 }
 
@@ -49,7 +62,7 @@ function placeCounter(col, board, player) {
     let rowPointer = board[col].length - 1;
     for (rowPointer; rowPointer >= 0; rowPointer -= 1) {
         if (board[col][rowPointer] === null) { // If current position is empty place counter
-          newBoard[col][rowPointer] = player;
+          newBoard[col][rowPointer] = player.colour;
           break;
         }
       }
@@ -67,7 +80,7 @@ function checkWin(row, col, board, player) {
 
   // Check win for column
   for (let rowPointer = 0; rowPointer < board[0].length; rowPointer += 1) {
-    if (board[col][rowPointer] === player) {
+    if (board[col][rowPointer] === player.colour) {
       count += 1;
     } else {
       count = 0;
@@ -81,7 +94,7 @@ function checkWin(row, col, board, player) {
 
   // Check win for row
   for (let colPointer = 0; colPointer < board.length; colPointer += 1) {
-    if (board[colPointer][row] === player) {
+    if (board[colPointer][row] === player.colour) {
       count += 1;
     } else {
       count = 0;
@@ -99,11 +112,12 @@ function checkWin(row, col, board, player) {
 
 function getRowCoord(col, board) {
   let rowPointer = board[col].length - 1
-  for (rowPointer; rowPointer > 0; rowPointer -= 1) {
+  for (rowPointer; rowPointer >= 0; rowPointer -= 1) {
       if (board[col][rowPointer] == null) {
           return rowPointer;
       }
   }
+  return null;
 }
 
 app.post('/board', (req, res) => {
@@ -112,7 +126,7 @@ app.post('/board', (req, res) => {
     const rowInput = req.body.row;
     const colInput = req.body.col;
     if (rowInput > 10 || colInput > 12) {
-        throw new Error('Invalid board size.');
+        res.sendStatus(400);
     }
 
     // Maybe make this into a seperate function 
@@ -132,9 +146,10 @@ app.post('/counter', (req, res) => {
         game.board = placeCounter(req.body.col, game.board, (game.players[game.turn]));
         game.winner = checkWin(row, col, game.board, game.players[game.turn]);
         game.turn = switchPlayer(game.turn);
-    };
-    res.send(game);
-
+        res.send(game);
+    } else {
+      res.sendStatus(400);
+    }
 });
 
 if (process.env.NODE_ENV !== "test") {
@@ -149,4 +164,6 @@ module.exports = {
     switchPlayer,
     checkWin,
     app,
+    Player,
+    getRowCoord
 }

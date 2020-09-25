@@ -1,103 +1,267 @@
 const { timeStamp } = require('console');
-const { placeCounter, createBoard, switchPlayer, checkWin } = require('../Server/server.js');
+const { create } = require('domain');
+const { placeCounter, createBoard, switchPlayer, checkWin, Player, getRowCoord } = require('../Server/server.js');
+const each = require('jest-each').default;
 
 // Unit Tests
 
-test('Can place a counter', () => {
+describe('Can place a counter', () => {
+    const p1 = new Player('Taylor', 'red');
+    const p2 = new Player('Ryan', 'yellow');
+    beforeEach(() => {
+        board = [
+                [null, null, null, null],
+                [null, null, null, null],
+                [null, null, null, null],
+                [null, null, null, null]];
+    });
+    
     // Arrange
-    let originalBoard = [[null, null, null, null],
-                    [null, null, null, null],
-                    [null, null, null, null],
-                    [null, null, null, null]];
-    
-    let expectedBoard = [[null, null, null, null],
-                    [null, null, null, null],
-                    [null, null, null, null],
-                    [null, null, null, 'red']];
-    
-    // Act
-    let actualBoard = placeCounter(3, originalBoard, 'red');
+    each([
+        [
+            p1, 0,
+            [[null, null, null, 'red'],
+            [null, null, null, null],
+            [null, null, null, null],
+            [null, null, null, null]]
+        ],
+        [
+            p2, 1,
+            [[null, null, null, null],
+            [null, null, null, 'yellow'],
+            [null, null, null, null],
+            [null, null, null, null]]
+        ],
+        [
+            p1, 2,
+            [[null, null, null, null],
+            [null, null, null, null],
+            [null, null, null, 'red'],
+            [null, null, null, null]]
+        ],
+        [
+            p2, 3,
+            [[null, null, null, null],
+            [null, null, null, null],
+            [null, null, null, null],
+            [null, null, null, 'yellow']]
+        ]
+    ]).it("input:", (player, column, expected_output) => {
+       
+        // Act
+        actual_output = placeCounter(column, board, player);
 
-    // Assert
-    expect(expectedBoard).toEqual(actualBoard);
+        // Assert
+        expect(actual_output).toStrictEqual(expected_output);
+    })
 });
 
-test('Can create board', () => {
-    // Arrange
-
-    // 4x5 Board
-    let expectedBoard = [[null, null, null, null],
-                    [null, null, null, null],
-                    [null, null, null, null],
-                    [null, null, null, null],
-                    [null, null, null, null]];
+describe('Can create board', () => {
     
-    // Act
-    let actualBoard = createBoard(4,5);
+    // Arrange
+    each([
+        //4x5
+        [[[null, null, null, null],
+        [null, null, null, null],
+        [null, null, null, null],
+        [null, null, null, null],
+        [null, null, null, null]], 4, 5],
 
-    // Assert
-    expect(expectedBoard).toEqual(actualBoard);
+        //3x3
+        [[[null,null,null],
+        [null,null,null],
+        [null,null,null]], 3, 3],
+
+        //5x7
+        [[[null, null, null, null, null],
+        [null, null, null, null, null],
+        [null, null, null, null, null],
+        [null, null, null, null, null],
+        [null, null, null, null, null],
+        [null, null, null, null, null],
+        [null, null, null, null, null]], 5, 7],
+
+        //Edge Case: 10x12
+        [[[null, null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null, null]], 10, 12]
+    ]).it("input:", (expected_output, rows, cols) => {
+        
+        // Act
+        actual_output = createBoard(rows,cols);
+
+        // Assert
+        expect(actual_output).toStrictEqual(expected_output)
+    })
 });
 
-test('Can switch player', () => {
-    // Arrange
-    let originalTurn = 0;
-
-    let expectedTurn = 1;
+describe('Can switch player', () => {
     
-    // Act
-    let actualTurn = switchPlayer(originalTurn);
+    // Arrange
+    each([
+        [0, 1],
+        [1, 0]
+    ]).it("input:", (playerTurn, expected_output) => {
+        
+        // Act
+        actual_output = switchPlayer(playerTurn);
 
-    // Assert
-    expect(expectedTurn).toEqual(actualTurn)
+        // Assert
+        expect(actual_output).toEqual(expected_output);
+    });
 
 });
 
-test('Can win vertically', () => {
-    // Arrange
-    let originalBoard = [[null, null, null, null],
-                        [null, null, null, null],
-                        ['red', 'red', 'red', 'red'],
-                        [null, null, null, null]];
-
-    let expectedWinner = 'red';
+describe('Can win vertically', () => {
+    const p1 = new Player('Taylor', 'red');
+    const p2 = new Player('Ryan', 'yellow');
     
-    // Act
-    let actualWinner = checkWin(0, 2, originalBoard);
+    // Arrange
+    each([
+        [[[null, null, null, null],
+        [null, null, null, null],
+        ['red', 'red', 'red', 'red'],
+        [null, null, null, null]], 0, 2, p1],
+        
+        [[[null, null, null, 'red'],
+        [null, null, 'red', 'red'],
+        [null, null, 'red', 'red'],
+        ['yellow', 'yellow', 'yellow', 'yellow']], 0, 3, p2],
 
-    // Assert
-    expect(expectedWinner).toEqual(actualWinner);
+        [[[null, null, 'yellow', 'yellow', 'yellow'],
+        ['red', 'red', 'red', 'red', 'yellow'],
+        [null, null, null, null, 'red'],
+        [null, null, null, null, 'yellow']], 0, 1, p1],
+
+        [[[null, null, 'red', 'red', 'red'],
+        [null, null, null, null, null],
+        [null, null, null, null, 'red'],
+        [null, null, null, null, 'red'],
+        [null, 'yellow', 'yellow', 'yellow', 'yellow']], 1, 4, p2]
+    ]).it("input:", (board, row, col, expected_output) => {
+
+        // Act
+        actual_output = checkWin(row, col, board, expected_output)
+
+        // Assert
+        expect(actual_output).toEqual(expected_output);
+    })
 });
 
-test('Can win horizontally', () => {
+describe('Can win horizontally', () => {
+    const p1 = new Player('Taylor', 'red')
+    const p2 = new Player('Ryan', 'yellow')
+    
     // Arrange
-    let originalBoard = [['yellow', null, null, null],
-                        ['yellow', null, null, null],
-                        ['yellow', null, null, null],
-                        ['yellow', null, null, null],
-                        [null, null, null, null]];
+    each([
+        [[[null, null, 'red', 'yellow'],
+        [null, null, 'red', 'yellow'],
+        [null, null, 'red', 'yellow'],
+        [null, null, null, 'yellow']], 3, 0, p2],
 
-    let expectedWinner = 'yellow';
+        [[[null, null, null, 'red', 'red'],
+        [null, null, null, 'red', 'yellow'],
+        [null, null, 'yellow', 'red', 'red'],
+        [null, 'yellow', 'yellow', 'red', 'yellow'],
+        [null, null, null, null, 'red']], 3, 0, p1],
 
-    // Act
-    let actualWinner = checkWin(0, 0, originalBoard);
+        [[[null, 'red', 'yellow', 'red'],
+        [null, null, 'yellow', 'red'],
+        [null, null, 'yellow', 'yellow'],
+        [null, null, 'yellow', 'red']], 2, 3, p2],
 
-    // Assert
-    expect(expectedWinner).toEqual(actualWinner);
+        [[[null, 'yellow', 'red', 'red'],
+        [null, 'red', 'yellow', 'yellow'],
+        [null, 'red', 'red', 'yellow'],
+        [null, 'red', 'yellow', 'yellow'],
+        [null, 'red', 'yellow', 'red'],
+        [null, null, null, null]], 1, 4, p1]
+    ]).it("input:", (board, row, col, expected_output) => {
+        // Act
+        actual_output = checkWin(row, col, board, expected_output);
+
+        // Assert
+        expect(actual_output).toEqual(expected_output);
+    });
 });
 
 it.todo('Can win diagonally +ve');
 
 it.todo('Can win diagonally -ve');
 
-it.todo('Cannot create board greater than 10x12');
 
-it.todo('Cannot place a counter in full column');
+describe('Cannot place a counter in full column', () => {
+    const p1 = new Player('Taylor', 'red');
+
+    // Arrange
+    each([
+            [[['red', 'red', 'red', 'red'],
+            [null, null, null, null],
+            [null, null, null, null],
+            [null, null, null, null]], 0],
+
+            [[[null, null, null, null],
+            ['red', 'red', 'red', 'red'],
+            [null, null, null, null],
+            [null, null, null, null]], 1],
+
+            [[[null, null, null, null],
+            [null, null, null, null],
+            ['red', 'red', 'red', 'red'],
+            [null, null, null, null]], 2],
+
+            [[[null, null, null, null],
+            [null, null, null, null],
+            [null, null, null, null],
+            ['red', 'red', 'red', 'red']], 3]
+    ]).it("input:", (board, col) => {
+        // Act
+        const expected_output = [...board];
+        actual_output = placeCounter(col, board, p1);
+
+        // Assert
+        expect(actual_output).toEqual(expected_output);
+
+    });
+});
 
 it.todo('Game over when board is full');
 
-it.todo('Can increase player score');
+test('Can increase player score', () => {
+    // Arrange
+    var p1 = new Player('Taylor', 'red', 0);
 
+    // Act
+    p1.addWin();
 
+    //Assert
+    expect(p1.score).toEqual(1);
+});
+
+describe('Can get first empty row inside given column', () => {
+    // Arrange
+    each([
+        [[[null, null, null, null]], 3],
+        [[[null, null, null, 'yellow']], 2],
+        [[[null, null, 'red', 'yellow']], 1],
+        [[[null, 'yellow', 'red', 'yellow']], 0],
+        [[['red', 'yellow', 'red', 'yellow']], null]
+    ]).it("input", (board, expected_output) => {
+        // Act
+        actual_output = getRowCoord(0, board);
+
+        // Assert
+        expect(actual_output).toEqual(expected_output)
+    })
+})
 
  
